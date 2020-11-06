@@ -47,3 +47,8 @@ largestPalindrome digits = largestPalindrome' begin end
   where
     begin = (10 ^ digits) - 1
     end = 10 ^ (digits - 1)
+
+sumSquarediff :: Integer -> Integer
+sumSquarediff x = (^ 2) (sum xs) - sum (map (^ 2) xs)
+  where
+    xs = [x, x -1 .. 1]
