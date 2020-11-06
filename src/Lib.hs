@@ -39,7 +39,7 @@ largestPalindrome' begin end
       Nothing -> largestPalindrome' (begin - 1) end
       Just p ->
         let d = p `div` begin
-            (p', d') = fromMaybe (0, 0) $ largestPalindrome' (begin - 1) (d + 1)
+            (p', d') = fromMaybe (0, 0) $ largestPalindrome' (begin - 1) (d + 1) -- Just to test fromMaybe
          in if p < p' then Just (p', d') else Just (p, d)
 
 largestPalindrome :: Integer -> Maybe (Integer, Integer)
