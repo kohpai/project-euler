@@ -4,6 +4,7 @@ module Lib
 where
 
 import Data.List (find, sort)
+import Data.Maybe (fromMaybe)
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -27,23 +28,21 @@ largestPrime x = if firstPrime < x then largestPrime $ x `div` firstPrime else x
 isPalindrome :: Integer -> Bool
 isPalindrome x = let str = show x in and $ zipWith (==) str $ reverse str
 
-largestPalindrome' :: Integer -> Integer -> (Integer, (Integer, Integer))
+largestPalindrome' :: Integer -> Integer -> Maybe (Integer, Integer)
 largestPalindrome' begin end
-  | begin < end = (0, (begin, end))
+  | begin < end = Nothing
   | begin == end =
     let p = begin * end
-     in if isPalindrome p then (p, (begin, end)) else (0, (begin, end))
+     in if isPalindrome p then Just (p, begin) else Nothing
   | otherwise =
-    case find (\(x, _) -> isPalindrome x) $
-      map
-        (\x -> (x * begin, x))
-        $ [begin, begin - 1 .. end] of
+    case find isPalindrome $ map (* begin) [begin, begin - 1 .. end] of
       Nothing -> largestPalindrome' (begin - 1) end
-      Just (p, x) ->
-        let secondTry = largestPalindrome' (begin - 1) (x + 1)
-         in if p < fst secondTry then secondTry else (p, (begin, x))
+      Just p ->
+        let d = p `div` begin
+            (p', d') = fromMaybe (0, 0) $ largestPalindrome' (begin - 1) (d + 1)
+         in if p < p' then Just (p', d') else Just (p, d)
 
-largestPalindrome :: Integer -> (Integer, (Integer, Integer))
+largestPalindrome :: Integer -> Maybe (Integer, Integer)
 largestPalindrome digits = largestPalindrome' begin end
   where
     begin = (10 ^ digits) - 1
