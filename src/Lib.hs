@@ -3,7 +3,9 @@ module Lib
   )
 where
 
+import Data.Char (digitToInt)
 import Data.List (find, sort)
+import Data.List.Ordered (minus, unionAll)
 import Data.Maybe (fromMaybe)
 
 someFunc :: IO ()
@@ -52,3 +54,20 @@ sumSquarediff :: Integer -> Integer
 sumSquarediff x = (^ 2) (sum xs) - sum (map (^ 2) xs)
   where
     xs = [x, x -1 .. 1]
+
+primes = 2 : 3 : minus [5, 7 ..] (unionAll [[p * p, p * p + 2 * p ..] | p <- tail primes])
+
+productList' :: String -> Int
+productList' str = product (map digitToInt str)
+
+productList :: String -> String -> [Int]
+productList [] _ = [0]
+productList window [] = [productList' window]
+productList window (x : xs) = productList' window : productList (rest ++ [x]) xs
+  where
+    (_ : rest) = window
+
+largestProduct :: String -> Int -> Int
+largestProduct n digits = maximum $ productList (take digits n) (drop digits n)
+
+pythagoreanTriples = [(a, b, c) | c <- [5 ..], b <- [4 .. c -1], a <- [3 .. b -1], (a * a) + (b * b) == (c * c)]
