@@ -24,6 +24,7 @@ dependencies:
 - data-ordlist
 - split
 - universe-base
+- memoize
 
 library:
   source-dirs: src

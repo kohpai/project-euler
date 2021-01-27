@@ -33,6 +33,7 @@ library
   build-depends:
       base >=4.7 && <5
     , data-ordlist
+    , memoize
     , split
     , universe-base
   default-language: Haskell2010
@@ -47,6 +48,7 @@ executable project-euler-exe
   build-depends:
       base >=4.7 && <5
     , data-ordlist
+    , memoize
     , project-euler
     , split
     , universe-base
@@ -63,6 +65,7 @@ test-suite project-euler-test
   build-depends:
       base >=4.7 && <5
     , data-ordlist
+    , memoize
     , project-euler
     , split
     , universe-base
