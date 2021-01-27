@@ -4,6 +4,7 @@ module Lib
 where
 
 import Data.Char (digitToInt)
+import Data.Function.Memoize (memoize2)
 import Data.List (find, transpose)
 import Data.List.Ordered (minus, unionAll)
 import Data.List.Split (chunksOf)
@@ -111,4 +112,14 @@ factors x = factors' x 1 []
 trianglePairs :: [(Int, Int)]
 trianglePairs = zip triangleNums $ map (length . factors) triangleNums
 
---find (\(n,m) -> m > 500) trianglePairs
+--maximumBy (\x y -> compare (snd x) (snd y)) $ map (\x -> (x, length $ collatzSeq x)) [999999, 999998 .. 2]
+
+latticePaths :: Int -> Int -> Int
+latticePaths = memoize2 lp
+--latticePaths' x y = map (\x' -> map (lp x') [0 ..]) [0 ..] !! x !! y
+  where
+    lp 0 _ = 1
+    lp _ 0 = 1
+    lp r d
+      | r == d = 2 * lp (r - 1) d
+      | otherwise = latticePaths (r -1) d + latticePaths r (d -1)
