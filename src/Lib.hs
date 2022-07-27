@@ -117,10 +117,19 @@ collatzSeq x = x : collatzSeq (if even x then x `div` 2 else 3 * x + 1)
 
 latticePaths :: Int -> Int -> Int
 latticePaths = memoize2 lp
---latticePaths' x y = map (\x' -> map (lp x') [0 ..]) [0 ..] !! x !! y
   where
+    --latticePaths' x y = map (\x' -> map (lp x') [0 ..]) [0 ..] !! x !! y
+
     lp 0 _ = 1
     lp _ 0 = 1
     lp r d
       | r == d = 2 * lp (r - 1) d
       | otherwise = latticePaths (r -1) d + latticePaths r (d -1)
+
+--biggest2050 :: Int -> [Int]
+--biggest2050 x = reverse $ takeWhile (< x) [2050 * (10 ^ i) | i <- [0 ..]]
+--
+--sumOf2050 :: Int -> [Bool]
+--sumOf2050 x = map f $ biggest2050 x
+--  where
+--    f y = let z = x - y in if z == 0 then True else f z
