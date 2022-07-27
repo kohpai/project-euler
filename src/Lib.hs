@@ -133,3 +133,6 @@ latticePaths = memoize2 lp
 --sumOf2050 x = map f $ biggest2050 x
 --  where
 --    f y = let z = x - y in if z == 0 then True else f z
+
+sumDigitOfExp :: Int -> Int
+sumDigitOfExp x = sum $ map digitToInt $ show $ product $ take x [2, 2 ..]
