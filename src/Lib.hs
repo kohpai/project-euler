@@ -136,3 +136,59 @@ latticePaths = memoize2 lp
 
 sumDigitOfExp :: Int -> Int
 sumDigitOfExp x = sum $ map digitToInt $ show $ product $ take x [2, 2 ..]
+
+oneDigitWord :: Int -> String
+oneDigitWord x
+  | length (show x) > 1 = error "more than one digit"
+  | otherwise = case x of
+    0 -> ""
+    1 -> "one"
+    2 -> "two"
+    3 -> "three"
+    4 -> "four"
+    5 -> "five"
+    6 -> "six"
+    7 -> "seven"
+    8 -> "eight"
+    9 -> "nine"
+
+twoDigitsWord :: Int -> String
+twoDigitsWord x
+  | lenX > 2 = error "more than two digits"
+  | lenX < 2 = lastWord
+  | x > 89 = "ninety" ++ lastWord
+  | x > 79 = "eighty" ++ lastWord
+  | x > 69 = "seventy" ++ lastWord
+  | x > 59 = "sixty" ++ lastWord
+  | x > 49 = "fifty" ++ lastWord
+  | x > 39 = "forty" ++ lastWord
+  | x > 29 = "thirty" ++ lastWord
+  | x > 19 = "twenty" ++ lastWord
+  | otherwise = case x of
+    10 -> "ten"
+    11 -> "eleven"
+    12 -> "twelve"
+    13 -> "thirteen"
+    14 -> "fourteen"
+    15 -> "fifteen"
+    16 -> "sixteen"
+    17 -> "seventeen"
+    18 -> "eighteen"
+    19 -> "nineteen"
+  where
+    lastWord = oneDigitWord (x `mod` 10)
+    lenX = length $ show x
+
+threeDigitsWord :: Int -> String
+threeDigitsWord x
+  | lenX > 3 = error "more than three digits"
+  | lenX < 3 = lastWord
+  | otherwise = firstWord ++ "hundred" ++ conjunction ++ lastWord
+  where
+    firstWord = oneDigitWord (x `div` 100)
+    lastWord = twoDigitsWord (x `mod` 100)
+    conjunction = if not (null lastWord) then "and" else ""
+    lenX = length $ show x
+
+-- 11 is "one thousand"
+-- sum (map (length . threeDigitsWord) [1 .. 999]) + 11
