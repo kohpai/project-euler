@@ -4,7 +4,7 @@ module Lib
 where
 
 import Data.Char (digitToInt)
-import Data.Function.Memoize (memoize2)
+import Data.Function.Memoize (memoize, memoize2)
 import Data.List (find, transpose)
 import Data.List.Ordered (minus, unionAll)
 import Data.List.Split (chunksOf)
@@ -197,12 +197,35 @@ datesInFeb :: Int -> Int
 datesInFeb x = if x `mod` 4 == 0 && (x `mod` 100 /= 0 || x `mod` 400 == 0) then 29 else 28
 
 datesInYear :: Int -> [Int]
-datesInYear x =  concatMap (\n -> [1 .. n]) datesInMonths
+datesInYear x = concatMap (\n -> [1 .. n]) datesInMonths
   where
     datesInMonths = [31, datesInFeb x, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 sundaysIn20thCent =
- length $ filter (\(x,y) -> x == 1 && y == 7) $ zip (concatMap datesInYear [1901 .. 2000]) $ concat (repeat [2,3,4,5,6,7,1])
+  length $ filter (\(x, y) -> x == 1 && y == 7) $ zip (concatMap datesInYear [1901 .. 2000]) $ concat (repeat [2, 3, 4, 5, 6, 7, 1])
 
 sumDigitsOfFactorial :: Integer -> Int
-sumDigitsOfFactorial x = sum $ map digitToInt $ show $ product [2..x]
+sumDigitsOfFactorial x = sum $ map digitToInt $ show $ product [2 .. x]
+
+properDivisors' :: Int -> Int -> Int -> [Int]
+properDivisors' x y z
+  | y >= z = [z]
+  | r == 0 = if p == y then [y, z] else y : z : properDivisors' x (y + 1) p
+  | otherwise = properDivisors' x (y + 1) z
+  where
+    (p, r) = x `divMod` y
+
+properDivisors :: Int -> [Int]
+properDivisors x
+  | x <= 1 = error "only receive integer >= 1"
+  | fstDiv == x = [1]
+  | fstDiv == p = [1, fstDiv]
+  | otherwise = 1 : fstDiv : properDivisors' x (fstDiv + 1) (x `div` fstDiv)
+  where
+    fstDiv = head $ filter (\y -> x `mod` y == 0) [2 ..]
+    p = x `div` fstDiv
+
+amicablesUnder :: Int -> [Int]
+amicablesUnder limit = takeWhile (< limit) $ filter (\x -> let a = d x in a /= 1 && x == d a && x /= a) [2 ..]
+  where
+    d = memoize (sum . properDivisors)
