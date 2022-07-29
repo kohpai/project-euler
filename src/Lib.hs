@@ -203,3 +203,6 @@ datesInYear x =  concatMap (\n -> [1 .. n]) datesInMonths
 
 sundaysIn20thCent =
  length $ filter (\(x,y) -> x == 1 && y == 7) $ zip (concatMap datesInYear [1901 .. 2000]) $ concat (repeat [2,3,4,5,6,7,1])
+
+sumDigitsOfFactorial :: Integer -> Int
+sumDigitsOfFactorial x = sum $ map digitToInt $ show $ product [2..x]
