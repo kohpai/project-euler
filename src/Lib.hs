@@ -192,3 +192,14 @@ threeDigitsWord x
 
 -- 11 is "one thousand"
 -- sum (map (length . threeDigitsWord) [1 .. 999]) + 11
+
+datesInFeb :: Int -> Int
+datesInFeb x = if x `mod` 4 == 0 && (x `mod` 100 /= 0 || x `mod` 400 == 0) then 29 else 28
+
+datesInYear :: Int -> [Int]
+datesInYear x =  concatMap (\n -> [1 .. n]) datesInMonths
+  where
+    datesInMonths = [31, datesInFeb x, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+sundaysIn20thCent =
+ length $ filter (\(x,y) -> x == 1 && y == 7) $ zip (concatMap datesInYear [1901 .. 2000]) $ concat (repeat [2,3,4,5,6,7,1])
