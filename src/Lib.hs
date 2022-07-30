@@ -216,3 +216,28 @@ amicablesUnder :: Int -> [Int]
 amicablesUnder limit = takeWhile (< limit) $ filter (\x -> let a = d x in a > 1 && x == d a && x /= a) [2 ..]
   where
     d = memoize (sum . properDivisors)
+
+
+abundantNums :: Int -> [Int]
+abundantNums x = map fst $ filter (\(y, d) -> d > y) $ map (\y -> (y, sum $ properDivisors y)) [12 .. x]
+
+myAbundantNums = abundantNums 20161
+
+elemBin :: Int -> [Int] -> Bool
+elemBin _ [] = False
+elemBin x [y] = x == y
+elemBin x xs
+  | x == mid = True
+  | x < mid = elemBin x $ take midIndex xs
+  | otherwise = elemBin x $ drop (midIndex + 1) xs
+  where
+    midIndex = length xs `div` 2
+    mid = xs !! midIndex
+
+isNonAbundant :: Int -> Bool
+isNonAbundant x = f $ takeWhile (<= x) myAbundantNums
+  where
+    f [] = True
+    f (y:ys) = not ((x - y) `elemBin` (y:ys)) && f ys
+
+-- sum $ filter isNonAbundant [20161, 20160 .. 1]
