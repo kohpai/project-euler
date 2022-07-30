@@ -207,25 +207,12 @@ sundaysIn20thCent =
 sumDigitsOfFactorial :: Integer -> Int
 sumDigitsOfFactorial x = sum $ map digitToInt $ show $ product [2 .. x]
 
-properDivisors' :: Int -> Int -> Int -> [Int]
-properDivisors' x y z
-  | y >= z = [z]
-  | r == 0 = if p == y then [y, z] else y : z : properDivisors' x (y + 1) p
-  | otherwise = properDivisors' x (y + 1) z
-  where
-    (p, r) = x `divMod` y
-
 properDivisors :: Int -> [Int]
 properDivisors x
-  | x <= 1 = error "only receive integer >= 1"
-  | fstDiv == x = [1]
-  | fstDiv == p = [1, fstDiv]
-  | otherwise = 1 : fstDiv : properDivisors' x (fstDiv + 1) (x `div` fstDiv)
-  where
-    fstDiv = head $ filter (\y -> x `mod` y == 0) [2 ..]
-    p = x `div` fstDiv
+  | x <= 1 = error "only accept integer >= 1"
+  | otherwise = 1 : concatMap (\(y, (p, _)) -> if y /= p then [y, p] else [y]) (filter (\(_, (_, r)) -> r == 0) $ map (\y -> (y, x `divMod` y)) [2 .. floor $ sqrt $ fromIntegral x])
 
 amicablesUnder :: Int -> [Int]
-amicablesUnder limit = takeWhile (< limit) $ filter (\x -> let a = d x in a /= 1 && x == d a && x /= a) [2 ..]
+amicablesUnder limit = takeWhile (< limit) $ filter (\x -> let a = d x in a > 1 && x == d a && x /= a) [2 ..]
   where
     d = memoize (sum . properDivisors)
