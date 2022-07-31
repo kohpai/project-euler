@@ -5,7 +5,7 @@ where
 
 import Data.Char (digitToInt)
 import Data.Function.Memoize (memoize, memoize2)
-import Data.List (find, transpose)
+import Data.List (find, findIndex, transpose)
 import Data.List.Ordered (minus, unionAll)
 import Data.List.Split (chunksOf)
 import Data.Maybe (fromMaybe)
@@ -18,11 +18,10 @@ someFunc = putStrLn "someFunc"
 multiples3and5 :: Integer -> Integer
 multiples3and5 x = sum [a | a <- [1 .. (x - 1)], a `mod` 3 == 0 || a `mod` 5 == 0]
 
--- limit
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+
 evenFib :: Integer -> Integer
 evenFib x = sum $ takeWhile (<= x) $ filter even fibs
-  where
-    fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
 largestPrime :: Integer -> Integer
 largestPrime x = if firstPrime < x then largestPrime $ x `div` firstPrime else x
@@ -250,3 +249,5 @@ lexPerm xs = concatMap (\(i, y) -> prepend y (lexPerm $ remove i xs)) enum
     remove y ys = take y ys ++ drop (y+1) ys
 
 -- lexPerm "0123456789" !! 999999
+
+-- findIndex (\x -> length x >= 1000) $ map show fibs
