@@ -5,10 +5,11 @@ where
 
 import Data.Char (digitToInt)
 import Data.Function.Memoize (memoize, memoize2)
-import Data.List (find, findIndex, transpose)
+import Data.List (elemIndex, find, findIndex, maximumBy, transpose)
 import Data.List.Ordered (minus, unionAll)
 import Data.List.Split (chunksOf)
 import Data.Maybe (fromMaybe)
+import qualified Data.Set as Set
 import Data.Universe.Helpers (diagonals)
 
 someFunc :: IO ()
@@ -251,3 +252,29 @@ lexPerm xs = concatMap (\(i, y) -> prepend y (lexPerm $ remove i xs)) enum
 -- lexPerm "0123456789" !! 999999
 
 -- findIndex (\x -> length x >= 1000) $ map show fibs
+
+recurringCycle' :: Int -> Int -> Set.Set Int -> [Int] -> Int
+recurringCycle' n d srs lrs
+  | r == 0 = 0
+  | r `Set.member` srs =
+    let lrs' = reverse lrs
+     in length $
+          drop
+            ( case r `elemIndex` lrs' of
+                Nothing -> error "remainder not found"
+                Just i -> i
+            )
+            lrs'
+  | otherwise = recurringCycle' (r * 10) d (Set.insert r srs) (r : lrs)
+  where
+    r = n `mod` d
+
+recurringCycle :: Int -> Int
+recurringCycle d
+  | d < 2 = error "only accept d >= 2"
+  | otherwise = recurringCycle' n d Set.empty []
+  where
+    n = 10^length (show d)
+
+
+-- maximumBy (\(_, a) (_, b) -> a `compare` b) $ zip [2 .. 999] $ map recurringCycle [2 .. 999]
