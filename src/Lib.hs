@@ -22,8 +22,7 @@ multiples3and5 x = sum [a | a <- [1 .. (x - 1)], a `mod` 3 == 0 || a `mod` 5 == 
 evenFib :: Integer -> Integer
 evenFib x = sum $ takeWhile (<= x) $ filter even fibs
   where
-    fibs = 0 : 1 : zipWith (+) fibs (tail fibs) -- how and why does this work?
-    -- https://stackoverflow.com/questions/37243102/haskell-infinite-recursion
+    fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 
 largestPrime :: Integer -> Integer
 largestPrime x = if firstPrime < x then largestPrime $ x `div` firstPrime else x
