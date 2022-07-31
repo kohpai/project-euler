@@ -241,3 +241,13 @@ isNonAbundant x = f $ takeWhile (<= x) myAbundantNums
     f (y:ys) = not ((x - y) `elemBin` (y:ys)) && f ys
 
 -- sum $ filter isNonAbundant [20161, 20160 .. 1]
+
+lexPerm :: [Char] -> [String]
+lexPerm [x] = [[x]]
+lexPerm xs = concatMap (\(i, y) -> prepend y (lexPerm $ remove i xs)) enum
+  where
+    prepend y ys = map (y :) ys
+    enum = zip [0 ..] xs
+    remove y ys = take y ys ++ drop (y+1) ys
+
+-- lexPerm "0123456789" !! 999999
