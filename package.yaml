@@ -21,10 +21,11 @@ description:         Please see the README on GitHub at <https://github.com/Gith
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
 - data-ordlist
+- memoize
 - split
 - universe-base
-- memoize
 
 library:
   source-dirs: src
