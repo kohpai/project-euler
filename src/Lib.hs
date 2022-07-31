@@ -216,7 +216,6 @@ amicablesUnder limit = takeWhile (< limit) $ filter (\x -> let a = d x in a > 1 
   where
     d = memoize (sum . properDivisors)
 
-
 abundantNums :: Int -> [Int]
 abundantNums x = map fst $ filter (\(y, d) -> d > y) $ map (\y -> (y, sum $ properDivisors y)) [12 .. x]
 
